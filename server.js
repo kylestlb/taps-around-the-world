@@ -4,12 +4,14 @@ var app = express();
 var bodyParser = require('body-parser');
 var path = require('path');
 var config = require(__dirname + '/config.js');
+
 var thinky = require(__dirname + '/util/thinky.js');
 var r = thinky.r;
+var Query = thinky.Query;
 var type = thinky.type;
+
 var All = require(__dirname + '/app/models/All.js');
 
-	
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -26,9 +28,50 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
+router.use(function(req, res, next) {
+    console.log('Req sent to server at ' + Date.now());
+    next();
+});
+
 router.get('/', function(req, res) {
     res.json({
         message: "Root api"
+    });
+});
+
+router.route('/beers')
+    .get(function(req, res) {
+        All.Beer.orderBy({
+            index: 'createdAt'
+        }).run().then(function(result) {
+            res.send(JSON.stringify(result));
+        }).error(function(error) {
+            res.send(500, {
+                error: error.message
+            });
+        });
+    })
+    .post(function(req, res) {
+        var beer = new All.Beer({
+            name: req.query.name,
+        });
+
+        beer.save(function(err) {
+            if (err)
+                res.send(err);
+            res.json({
+                message: 'beer created.'
+            });
+        });
+    });
+
+
+router.route('/beers/:id')
+.get(function(req, res){
+    Beer.get(id).run().then(function(beer){
+        res.json({
+            beer: beer
+        });
     });
 });
 
@@ -36,79 +79,5 @@ router.get('/', function(req, res) {
 app.use('/api', router);
 
 var port = process.env.PORT || 8080;
-app.listen('8081');
-
-
-
-// Example RDB boilerplate if we don't end up using THINKY
-// 
-// function start(connection) {
-//     app._rdbConn = connection;
-
-//     console.log('Starting server on port ') + port;
-// }
-
-
-/*
- * Connect to rethinkdb, create the needed tables/indexes and then start express.
- * Create tables/indexes then start express
- */
-/*async.waterfall([
-
-    function connect(callback) {
-        r.connect(config.rethinkdb, callback);
-    },
-    function createDatabase(connection, callback) {
-        //Create the database if needed.
-        r.dbList().contains(config.rethinkdb.db).do(function(containsDb) {
-            return r.branch(
-                containsDb, {
-                    created: 0
-                },
-                r.dbCreate(config.rethinkdb.db)
-            );
-        }).run(connection, function(err) {
-            callback(err, connection);
-        });
-    },
-    function createTable(connection, callback) {
-        //Create the table if needed.
-        r.tableList().contains('beers').do(function(containsTable) {
-            return r.branch(
-                containsTable, {
-                    created: 0
-                },
-                r.tableCreate('beers')
-            );
-        }).run(connection, function(err) {
-            callback(err, connection);
-        });
-    },
-    function createIndex(connection, callback) {
-        //Create the index if needed.
-        r.table('beers').indexList().contains('createdAt').do(function(hasIndex) {
-            return r.branch(
-                hasIndex, {
-                    created: 0
-                },
-                r.table('beers').indexCreate('createdAt')
-            );
-        }).run(connection, function(err) {
-            callback(err, connection);
-        });
-    },
-    function waitForIndex(connection, callback) {
-        //Wait for the index to be ready.
-        r.table('beers').indexWait('createdAt').run(connection, function(err, result) {
-            callback(err, connection);
-        });
-    }
-], function(err, connection) {
-    if (err) {
-        console.error(err);
-        process.exit(1);
-        return;
-    }
-
-    start(connection);
-});*/
+app.listen(port);
+console.log('listening on port ' + port);
