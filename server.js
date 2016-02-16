@@ -1,8 +1,15 @@
-var async = require('async');
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var path = require('path');
+var fs = require('fs'),
+    https = require('https'),
+    async = require('async'),
+    express = require('express'),
+    app = express(),
+    bodyParser = require('body-parser'),
+    path = require('path'),
+    helmet = require('helmet');
+
+
+
+app.use(helmet());
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -19,4 +26,11 @@ app.use('/api', require(__dirname + '/api.js'));
 
 var port = process.env.PORT || 8080;
 app.listen(port);
-console.log('listening on port ' + port);
+
+
+// Add HTTPS when app is ready to hit the wild
+// 
+// https.createServer({
+//     key: fs.readFileSync('key.pem'),
+//     cert: fs.readFileSync('cert.pem')
+// }, app).listen(8080);

@@ -5,6 +5,7 @@
     "async": "^1.5.2",
     "body-parser": "^1.15.0",
     "express": "^4.13.4",
+    "helmet": "^1.1.0",
     "rethinkdb": "^2.2.1",
     "thinky": "^2.2.4"
   }

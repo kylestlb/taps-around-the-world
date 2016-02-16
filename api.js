@@ -18,5 +18,6 @@ router.get('/', function(req, res) {
 // Hook up each router for each model
 router.use('/beers',require('./app/routes/beers'));
 //router.use('/taplist',require('./taplist'))
+//... etc
 
 module.exports = router;

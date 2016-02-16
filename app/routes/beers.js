@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
-
 var All = require(__dirname + '/../models/All.js');
-
 var thinky = require(__dirname + '/../../util/thinky');
 var r = thinky.r;
 var Query = thinky.Query;
