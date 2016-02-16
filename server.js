@@ -4,10 +4,13 @@ var fs = require('fs'),
     express = require('express'),
     app = express(),
     bodyParser = require('body-parser'),
+    cookieParser = require('cookie-parser'),
     path = require('path'),
-    helmet = require('helmet');
-
-
+    helmet = require('helmet'),
+    morgan = require('morgan'),
+    flash = require('connect-flash'),
+    passport = require('passport'),
+    session = require('express-session');
 
 app.use(helmet());
 
@@ -16,6 +19,18 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(bodyParser.json());
+
+app.use(morgan('dev'));
+app.use(cookieParser());
+app.use(bodyParser());
+
+// app.use(session({
+//     secret: 'beersessionsecret'
+// }));
+// app.use(passport.initialize());
+// app.use(passport.session());
+// app.use(flash());
+
 
 // Serve up index
 app.get('/', function(req, res) {
