@@ -1,8 +1,8 @@
-var thinky = require('../../util/thinky.js');
-type = thinky.type,
-r = thinky.r,
-validator = require('validator'),
-bcrypt = require('bcryptjs');
+var thinky = require('../../util/thinky.js'),
+    type = thinky.type,
+    r = thinky.r,
+    validator = require('validator'),
+    bcrypt = require('bcryptjs');
 
 var fn = function(pw) {
     console.log(pw);
@@ -19,12 +19,12 @@ var User = thinky.createModel('User', {
 User.ensureIndex('username');
 
 User.define('validPassword', function(password) {
-	console.log(password);
+    console.log(password);
     return bcrypt.compareSync(password, this.password);
 });
 
 User.defineStatic('generateHash', function(password) {
-	return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 });
 
 module.exports = User;

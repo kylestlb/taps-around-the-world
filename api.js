@@ -1,8 +1,8 @@
-var async = require('async');
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var router = express.Router();
+var async = require('async'),
+    express = require('express'),
+    app = express(),
+    bodyParser = require('body-parser'),
+    router = express.Router();
 
 router.use(function(req, res, next) {
     console.log('Req sent to server at ' + Date.now());
@@ -16,8 +16,8 @@ router.get('/', function(req, res) {
 });
 
 // Hook up each router for each model
-router.use('/beers',require('./app/routes/beers'));
-router.use('/users',require('./app/routes/users'));
+router.use('/beers', require('./app/routes/beers'));
+router.use('/users', require('./app/routes/users'));
 //router.use('/taplist',require('./taplist'))
 //... etc
 

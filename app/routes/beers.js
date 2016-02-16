@@ -1,10 +1,10 @@
-var express = require('express');
-var router = express.Router();
-var All = require(__dirname + '/../models/All.js');
-var thinky = require(__dirname + '/../../util/thinky');
-var r = thinky.r;
-var Query = thinky.Query;
-var type = thinky.type;
+var express = require('express'),
+    router = express.Router(),
+    All = require(__dirname + '/../models/All.js'),
+    thinky = require(__dirname + '/../../util/thinky'),
+    r = thinky.r,
+    Query = thinky.Query,
+    type = thinky.type;
 
 
 router.route('/')
@@ -34,12 +34,12 @@ router.route('/')
     });
 
 router.route('/:id')
-.get(function(req, res){
-    Beer.get(id).run().then(function(beer){
-        res.json({
-            beer: beer
+    .get(function(req, res) {
+        Beer.get(id).run().then(function(beer) {
+            res.json({
+                beer: beer
+            });
         });
     });
-});
 
 module.exports = router;

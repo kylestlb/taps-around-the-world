@@ -1,6 +1,6 @@
-var thinky = require('../../util/thinky.js');
-var type = thinky.type;
-var r = thinky.r;
+var thinky = require('../../util/thinky.js'),
+    type = thinky.type,
+    r = thinky.r;
 
 var Beer = thinky.createModel("Beer", {
     id: type.string(),

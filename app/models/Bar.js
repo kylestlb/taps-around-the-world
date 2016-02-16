@@ -1,11 +1,11 @@
-var thinky = require('../../util/thinky.js');
-var type = thinky.type;
-var r = thinky.r;
+var thinky = require('../../util/thinky.js'),
+    type = thinky.type,
+    r = thinky.r;
 
 var Bar = thinky.createModel('Bar', {
-	id: type.string(),
-	name: type.string(),
-	createdAt: type.date().default(r.now)
+    id: type.string(),
+    name: type.string(),
+    createdAt: type.date().default(r.now)
 });
 
 Bar.ensureIndex('name');
