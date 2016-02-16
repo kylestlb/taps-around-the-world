@@ -24,6 +24,7 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser());
 
+// Un comment when ready to ramp up Passport stuff
 // app.use(session({
 //     secret: 'beersessionsecret'
 // }));
