@@ -16,7 +16,7 @@ router.route('/')
                 else
                     console.log('invalid pass!')
 
-                res.status(409).send({
+                res.status(409).json({
                     error: 'User already exists.'
                 });
                 return;
@@ -31,7 +31,7 @@ router.route('/')
 
             user.save(function(err) {
                 if (err)
-                    res.status(500).send({
+                    res.status(500).json({
                         error: 'Error writing user to database.'
                     });
                 res.json({

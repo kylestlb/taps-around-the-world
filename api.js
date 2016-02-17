@@ -19,6 +19,7 @@ router.get('/', function(req, res) {
 router.use('/beer', require('./app/routes/beer'));
 router.use('/user', require('./app/routes/user'));
 router.use('/login', require('./app/routes/login'));
+router.use('/logout', require('./app/routes/logout'));
 //router.use('/taplist',require('./taplist'))
 //... etc
 

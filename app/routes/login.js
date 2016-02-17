@@ -2,13 +2,13 @@ var express = require('express'),
     passport = require('passport'),
     LocalStrategy = require('passport-local'),
     All = require(__dirname + '/../models/All.js'),
-    // thinky = require(__dirname + '/../models/All.js'),    
     router = express.Router();
 
 passport.serializeUser(function(user, done) {
     done(null, user.id);
 });
 
+// Resurrect with ID only
 passport.deserializeUser(function(id, done) {
     All.User.get(id).run().then(function(user, err) {
         if (err) {
@@ -27,7 +27,6 @@ passport.use(new LocalStrategy(
         }).run().then(function(user, err) {
             console.log(err);
             if (err) {
-                console.log('error logging in');
                 return done(err);
             }
             if (user.length === 0) {
@@ -47,15 +46,14 @@ passport.use(new LocalStrategy(
 
 router.route('/')
     .post(function(req, res, next) {
-        console.log('about to auth...');
         passport.authenticate('local', function(err, user, info) {
             if (err) {
-                return res.status(500).send({
+                return res.status(500).json({
                     error: err
                 });
             }
             if (!user) {
-                return res.status(401).send({
+                return res.status(401).json({
                     error: 'Could not log in.'
                 });
             }
@@ -63,7 +61,7 @@ router.route('/')
                 if (err) {
                     return next(err);
                 }
-                return res.json({
+                return res.status(200).json({
                     message: 'Logged in successfully.'
                 });
             })

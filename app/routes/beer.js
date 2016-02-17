@@ -14,12 +14,20 @@ router.route('/')
         }).run().then(function(result) {
             res.send(JSON.stringify(result));
         }).error(function(error) {
-            res.send(500, {
+            res.status(500).json({
                 error: error.message
             });
         });
     })
     .post(function(req, res) {
+
+        // Check if logged in
+        if (!req.user) {
+            res.status(401).json({
+                error: 'Need to be logged in for this feature.'
+            });
+            return;
+        }
         var beer = new All.Beer({
             name: req.query.name,
         });
@@ -28,7 +36,7 @@ router.route('/')
             if (err)
                 res.send(err);
             res.json({
-                message: 'beer created.'
+                message: 'Beer created.'
             });
         });
     });
