@@ -10,6 +10,8 @@ var fs = require('fs'),
     morgan = require('morgan'),
     flash = require('connect-flash'),
     passport = require('passport'),
+    LocalStrategy = require('passport-local'),
+    All = require('./app/models/All.js'),
     session = require('express-session');
 
 app.use(helmet());
@@ -22,16 +24,17 @@ app.use(bodyParser.json());
 
 app.use(morgan('dev'));
 app.use(cookieParser());
-app.use(bodyParser());
 
 // Un comment when ready to ramp up Passport stuff
-// app.use(session({
-//     secret: 'beersessionsecret'
-// }));
-// app.use(passport.initialize());
-// app.use(passport.session());
-// app.use(flash());
+app.use(session({
+    secret: 'beersecret',
+    resave: false,
+    saveUninitialized: false
+}));
 
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
 // Serve up index
 app.get('/', function(req, res) {

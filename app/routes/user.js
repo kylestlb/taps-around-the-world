@@ -1,10 +1,6 @@
 var express = require('express'),
     router = express.Router(),
-    All = require(__dirname + '/../models/All.js'),
-    thinky = require(__dirname + '/../../util/thinky'),
-    r = thinky.r,
-    Query = thinky.Query,
-    type = thinky.type;
+    All = require(__dirname + '/../models/All.js');
 
 // Create user
 router.route('/')
@@ -49,6 +45,11 @@ router.route('/')
 // Retrieve user by ID
 router.route('/:id')
     .get(function(req, res) {
-
+        All.User.get(req.params.id).run().then(function(user) {
+        	// do nothing yet
+        });
     });
+
+
+
 module.exports = router;

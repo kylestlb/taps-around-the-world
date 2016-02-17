@@ -15,9 +15,10 @@ router.get('/', function(req, res) {
     });
 });
 
-// Hook up each router for each model
-router.use('/beers', require('./app/routes/beers'));
-router.use('/users', require('./app/routes/users'));
+// Hook up each router for each model / action
+router.use('/beer', require('./app/routes/beer'));
+router.use('/user', require('./app/routes/user'));
+router.use('/login', require('./app/routes/login'));
 //router.use('/taplist',require('./taplist'))
 //... etc
 
