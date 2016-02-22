@@ -12,7 +12,6 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(id, done) {
     All.User.get(id).run().then(function(user, err) {
         if (err) {
-            console.log(err);
             return done(err);
         }
         done(err, user);
@@ -25,22 +24,26 @@ passport.use(new LocalStrategy(
         All.User.getAll(username, {
             index: 'username'
         }).run().then(function(user, err) {
-            console.log(err);
             if (err) {
-                return done(err);
+                var debugInfo = config.debug ? ' ' + err : '';
+                return done(debugInfo);
             }
             if (user.length === 0) {
                 return done(null, false, {
                     message: 'Incorrect username or password.'
                 });
             }
-            if (!user[0].validPassword(password)) {
-                return done(null, false, {
-                    message: 'Incorrect username or password.'
-                });
-            }
-
-            return done(null, user[0]);
+            user[0].checkPassword(password).then(function(result) {
+                if (result)
+                    return done(null, user[0]);
+                else
+                    return done(null, false, {
+                        message: 'Incorrect username or password.'
+                    });
+            }).catch(function(err) {
+                var debugInfo = config.debug ? ' ' + err : '';
+                return done('Error logging in.' + debugInfo);
+            });
         });
     }));
 

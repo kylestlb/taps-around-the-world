@@ -2,7 +2,7 @@ var thinky = require('../../util/thinky.js'),
     type = thinky.type,
     r = thinky.r,
     validator = require('validator'),
-    bcrypt = require('bcryptjs');
+    bcrypt = require('bcrypt');
 
 var fn = function(pw) {
     console.log(pw);
@@ -18,13 +18,49 @@ var User = thinky.createModel('User', {
 
 User.ensureIndex('username');
 
-User.define('validPassword', function(password) {
-    console.log(password);
-    return bcrypt.compareSync(password, this.password);
+User.define('checkPassword', function(password) {
+    return new Promise(function(resolve, reject) {
+        // this.password: hash stored in DB
+        console.log(password);
+        console.log(this.password);
+        bcrypt.compare(password, this.password, function(err, res){
+
+            if(err)
+                reject(err);
+            else
+                resolve(res);
+        });
+    }.bind(this));
+    // console.log(password);
+    // return bcrypt.compareSync(password, this.password);
 });
 
 User.defineStatic('generateHash', function(password) {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+    return new Promise(function(resolve, reject) {
+        bcrypt.genSalt(10, function(err, salt) {
+            bcrypt.hash(password, salt, function(err, result) {
+                if (err)
+                    reject(err);
+                else
+                    resolve(result);
+            });
+        });
+    });
+    // return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 });
 
 module.exports = User;
+
+
+/*  bcrypt.genSalt(10, function (err, salt) {
+      if (err) {
+        return next(err);
+      }
+      bcrypt.hash(user.password, salt, function(err, hash) {
+        if (err) {
+          return next(err);
+        }
+        user.password = hash;
+        next();
+      });
+    });*/

@@ -1,6 +1,7 @@
 var express = require('express'),
     router = express.Router(),
-    All = require(__dirname + '/../models/All.js');
+    All = require(__dirname + '/../models/All.js'),
+    config = require(__dirname + '/../../config.js');
 
 // Create user
 router.route('/')
@@ -11,34 +12,34 @@ router.route('/')
 
             // User exists (results are returned in array)
             if (user.length !== 0) {
-                if (user[0].validPassword(req.body.password))
-                    console.log('valid pass!')
-                else
-                    console.log('invalid pass!')
-
                 res.status(409).json({
-                    error: 'User already exists.'
+                    error: 'Username already exists.'
                 });
-                return;
+
+            } else {
+
+                // Generate hashed password
+                All.User.generateHash(req.body.password)
+                    .then(function(result) {
+                        var user = new All.User({
+                            username: req.body.username,
+                            password: result
+                        });
+
+                        user.save(function(err) {
+                            if (err)
+                                res.status(500).json({
+                                    error: 'Error writing user to database: ' + err
+                                });
+                            else
+                                res.status(200).json({
+                                    message: 'User created.'
+                                });
+                        });
+                        return;
+                    });
             }
 
-            // Generate hashed password
-            var hash = All.User.generateHash(req.body.password);
-            var user = new All.User({
-                username: req.body.username,
-                password: hash
-            });
-
-            user.save(function(err) {
-                if (err)
-                    res.status(500).json({
-                        error: 'Error writing user to database.'
-                    });
-                res.json({
-                    message: 'User created.'
-                });
-            });
-            return;
         });
     });
 
@@ -46,7 +47,7 @@ router.route('/')
 router.route('/:id')
     .get(function(req, res) {
         All.User.get(req.params.id).run().then(function(user) {
-        	// do nothing yet
+            // do nothing yet
         });
     });
 

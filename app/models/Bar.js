@@ -13,4 +13,4 @@ Bar.ensureIndex('name');
 module.exports = Bar;
 
 var TapList = require(__dirname + '/TapList.js');
-Bar.hasOne(TapList, 'taplist', 'id', 'barId');
+Bar.hasMany(TapList, 'taplist', 'id', 'barId');
