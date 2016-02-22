@@ -5,7 +5,7 @@ var async = require('async'),
     router = express.Router();
 
 router.use(function(req, res, next) {
-    console.log('Req sent to server at ' + Date.now());
+    // console.log('Req sent to server at ' + Date.now());
     next();
 });
 

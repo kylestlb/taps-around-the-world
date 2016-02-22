@@ -5,6 +5,8 @@ var express = require('express'),
     router = express.Router();
 
 passport.serializeUser(function(user, done) {
+    console.log('serializing');
+    console.log(user.id);
     done(null, user.id);
 });
 
@@ -12,7 +14,8 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(id, done) {
     All.User.get(id).run().then(function(user, err) {
         if (err) {
-            return done(err);
+             done(err);
+             return;
         }
         done(err, user);
     });
@@ -57,7 +60,7 @@ router.route('/')
             }
             if (!user) {
                 return res.status(401).json({
-                    error: 'Could not log in.'
+                    error: info
                 });
             }
             req.logIn(user, function(err) {

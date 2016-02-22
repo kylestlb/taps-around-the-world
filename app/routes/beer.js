@@ -22,6 +22,9 @@ router.route('/')
     .post(function(req, res) {
 
         // Check if logged in
+        console.log('req user');
+        console.log(req.user);
+        console.log(req.session);
         if (!req.user) {
             res.status(401).json({
                 error: 'Need to be logged in for this feature.'

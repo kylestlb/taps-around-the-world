@@ -21,8 +21,6 @@ User.ensureIndex('username');
 User.define('checkPassword', function(password) {
     return new Promise(function(resolve, reject) {
         // this.password: hash stored in DB
-        console.log(password);
-        console.log(this.password);
         bcrypt.compare(password, this.password, function(err, res){
 
             if(err)
@@ -31,8 +29,6 @@ User.define('checkPassword', function(password) {
                 resolve(res);
         });
     }.bind(this));
-    // console.log(password);
-    // return bcrypt.compareSync(password, this.password);
 });
 
 User.defineStatic('generateHash', function(password) {
@@ -46,7 +42,6 @@ User.defineStatic('generateHash', function(password) {
             });
         });
     });
-    // return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 });
 
 module.exports = User;

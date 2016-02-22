@@ -5,10 +5,7 @@ import VueResource from 'vue-resource'
 import Bars from './components/Bars.vue'
 import Profile from './components/Profile.vue'
 import About from './components/About.vue'
-import Navigation from './components/Navigation.vue'
-
-console.log('nav!');
-console.log(Navigation);
+import Login from './components/Login.vue'
 
 Vue.use(VueRouter)
 Vue.use(VueResource)
@@ -25,7 +22,10 @@ router.map({
 	},
 	'/about': {
 		component: About
-	}		
+	},
+	'/login': {
+		component: Login
+	}			
 });
 
 router.redirect({

@@ -14,23 +14,40 @@ var fs = require('fs'),
     All = require('./app/models/All.js'),
     session = require('express-session');
 
-app.use(helmet());
+// app.use(helmet());
 
 // Enable cors for dev
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+// app.use(function(req, res, next) {
+//     res.header('Access-Control-Allow-Credentials', true);
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+//     // res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+// });
+
+// app.use(function(req, res, next) {
+// res.header('Access-Control-Allow-Credentials', true);
+// res.header('Access-Control-Allow-Origin', req.headers.origin);
+// res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+// res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+// if ('OPTIONS' == req.method) {
+//      res.send(200);
+//  } else {
+//      next();
+//  }
+// });
+// 
+app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.urlencoded({
-    extended: true
+    extended: false
 }));
 
 app.use(bodyParser.json());
 
 app.use(morgan('dev'));
-app.use(cookieParser());
+app.use(cookieParser('beersecret'));
 
 // Un comment when ready to ramp up Passport stuff
 app.use(session({
@@ -39,13 +56,15 @@ app.use(session({
     saveUninitialized: false
 }));
 
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
 // Serve up index
 app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname + '/public/index.html'));
+    res.sendFile(path.join(__dirname + '/index.html'));
 });
 
 app.use('/api', require(__dirname + '/api.js'));
