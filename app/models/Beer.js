@@ -5,7 +5,8 @@ var thinky = require('../../util/thinky.js'),
 var Beer = thinky.createModel("Beer", {
     id: type.string(),
     name: type.string(),
-    createdAt: type.date().default(r.now)
+    createdAt: type.date().default(r.now),
+    brewery: type.string()
     // barId: type.string(),
     // approvals: [{
     // 	id: type.string(),

@@ -19,6 +19,6 @@
     "validator": "^4.8.0"
   },
   "scripts": {
-    "start": "node-debug -c server.js"
+    "start": "nodemon server.js"
   }
 }
