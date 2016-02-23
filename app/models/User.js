@@ -13,7 +13,8 @@ var User = thinky.createModel('User', {
     id: type.string(),
     username: type.string(),
     password: type.string(),
-    createdAt: type.date().default(r.now())
+    createdAt: type.date().default(r.now()),
+    reauth: type.boolean().default(true)
 });
 
 User.ensureIndex('username');

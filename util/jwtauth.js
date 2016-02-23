@@ -1,6 +1,9 @@
 var All = require(__dirname + '/../app/models/All.js'),
-	security = require(__dirname + '/../security.js'),
-    jwt = require('jwt-simple');
+    security = require(__dirname + '/../security.js'),
+    thinky = require(__dirname + '/../util/thinky.js'),
+    r = thinky.r,
+    jwt = require('jwt-simple'),
+    moment = require('moment');
 
 module.exports = function(req, res, next) {
     var token = (req.body && req.body.access_token) ||
@@ -8,22 +11,36 @@ module.exports = function(req, res, next) {
         req.headers['x-access-token'];
 
     if (token) {
-    	try {
-    		var decoded = jwt.decode(token, security.token_secret);
-    		// handle token.
-    		if(decoded.exp <= Date.now()) {
-    			res.end('Access token has expired.', 400);
-    		}
+        try {
+            var decoded = jwt.decode(token, security.token_secret);
+            All.User.get(decoded.iss).then(function(user) {
+                if (decoded.exp <= Date.now()) {
+                    // If expired, check reauth flag on User model.
+                    // If 'true', deny entry.
+                    // If 'false', refresh the token.
 
-    		All.User.get(decoded.iss).then(function(user){
-    			req.user = user;
-    			return next();
-    		});
+                    if (user.reauth) {
+                        return next();
+                    } else {
+                        // Refresh token here
+                        var expires = moment().add(1, 'minutes').valueOf();
+                        token = jwt.encode({
+                            iss: user.id,
+                            exp: expires,
+                        }, security.token_secret);
+                        req.newToken = token;
+                        req.user = user;
+                        return next();
+                    }
+                }
+                req.user = user;                
+                return next();
+            });
 
-    	} catch (err) {
-    		return next();
-    	}
+        } catch (err) {
+            return next();
+        }
     } else {
-    	next();
+        next();
     }
 }

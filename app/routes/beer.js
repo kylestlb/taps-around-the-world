@@ -22,7 +22,6 @@ router.route('/')
         });
     })
     .post(function(req, res) {
-
         // Check if logged in
         if (!req.user) {
             res.status(401).json({
@@ -37,9 +36,17 @@ router.route('/')
         beer.save(function(err) {
             if (err)
                 res.send(err);
-            res.json({
+
+            var payload = req.newToken ? 
+            {
+                token: req.newToken,
+                message: 'Beer created and issued new token.'
+            } :
+            {
                 message: 'Beer created.'
-            });
+            };
+            
+            res.json(payload);
         });
     });
 

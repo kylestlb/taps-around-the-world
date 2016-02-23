@@ -1,7 +1,5 @@
 var express = require('express'),
     app = express(),
-    passport = require('passport'),
-    LocalStrategy = require('passport-local'),
     All = require(__dirname + '/../models/All.js'),
     moment = require('moment'),
     jwt = require('jwt-simple'),
@@ -26,15 +24,20 @@ router.route('/')
             }
             user[0].checkPassword(req.body.password).then(function(result) {
                 if (result) {
-                    var expires = moment().add(7, 'days').valueOf();
+
+                    // Successful login - de-flag account
+                    user[0].reauth = false;
+                    user[0].save(function(doc){
+                        console.log('saved');
+                    });
+                    var expires = moment().add(1, 'minutes').valueOf();
                     var token = jwt.encode({
                         iss: user[0].id,
                         exp: expires
                     }, security.token_secret);
                     res.status(200).json({
                         token: token,
-                        expires: expires,
-                        user: user[0]
+                        expires: expires
                     });
                 } else {
                     res.status(401).json({
