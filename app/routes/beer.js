@@ -4,9 +4,11 @@ var express = require('express'),
     thinky = require(__dirname + '/../../util/thinky'),
     r = thinky.r,
     Query = thinky.Query,
+    jwauth = require(__dirname + '/../../util/jwtauth'),
     type = thinky.type;
 
 
+router.use(jwauth);
 router.route('/')
     .get(function(req, res) {
         All.Beer.orderBy({
@@ -22,9 +24,6 @@ router.route('/')
     .post(function(req, res) {
 
         // Check if logged in
-        console.log('req user');
-        console.log(req.user);
-        console.log(req.session);
         if (!req.user) {
             res.status(401).json({
                 error: 'Need to be logged in for this feature.'

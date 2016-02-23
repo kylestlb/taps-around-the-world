@@ -33,71 +33,73 @@
 <script>
 import validator from 'validator';
 import { API_URL } from '../config';
-export default {
-	data ()  {
-		return {
-			loginMode: true,
-			activeButton: 'pure-button-primary',
-			pureButton: 'pure-button',
-			password: '',
-			passwordRepeat: '',
-			email: '',
-			name: ''
-		}
-	},
-	methods: {
-		changeMode(mode) {
-			this.loginMode = mode;
-		},
+import VueRouter from 'vue-router';
+
+export
+default {
+    data() {
+        return {
+            loginMode: true,
+            activeButton: 'pure-button-primary',
+            pureButton: 'pure-button',
+            password: '',
+            passwordRepeat: '',
+            email: '',
+            name: ''
+        }
+    },
+    methods: {
+        changeMode(mode) {
+            this.loginMode = mode;
+        },
         submitForm(event) {
             if (this.loginMode) {
                 this.$http.post(API_URL + '/login', {
                     username: this.email,
                     password: this.password
+
                 }).then((response) => {
-                	// Success
+                    // Success
                     console.log(response);
-                    console.log(response.headers());
+                    console.log(this.$router);
+                    this.$router.go({
+                        path: '/bars'
+                    });
                 }, (response) => {
-                	// Error
+                    // Error
                     console.log(response);
                 });
             } else {
-            	this.$http.post(API_URL + '/user', {
-            		username: this.email,
-            		password: this.password
-            	}).then((response) => {
-            		console.log('success!');
-            		console.log(response);
-            	}, (response) => {
-            		console.log('failure!');
-            		console.log(response);
-            	});
+                this.$http.post(API_URL + '/user', {
+                    username: this.email,
+                    password: this.password
+                }).then((response) => {
+                    console.log('success!');
+                    console.log(response);
+                }, (response) => {
+                    console.log('failure!');
+                    console.log(response);
+                });
             }
-},        addbeer(event) {
+        }, addbeer(event) {
             this.$http.post(API_URL + '/beer', {
                 name: 'Bud',
                 brewery: 'Bud'
-            }, {
-                xhr: {
-                	withCredentials: true
-                }
             }).then((response) => {
 
-                    console.log(response);
-        	}, (response) => {
-
-        	});
+                console.log(response);
+            }, (response) => {
+                console.log(response);
+            });
         },
         logout(event) {
-        	this.$http.post(API_URL + '/logout'
-        	).then((response) => {
-        		console.log(response);
-        	}, (response) => {
-        		console.log(response);
-        	});
-        }        
-	}
+            this.$http.post(API_URL + '/logout').then((response) => {
+                console.log(response);
+            }, (response) => {
+                console.log(response);
+            });
+        }
+    }
 }
 </script>
 <style>

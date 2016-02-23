@@ -12,32 +12,20 @@ var fs = require('fs'),
     passport = require('passport'),
     LocalStrategy = require('passport-local'),
     All = require('./app/models/All.js'),
-    session = require('express-session');
+    session = require('express-session'),
+    jwt = require('jwt-simple');
 
 // app.use(helmet());
-
-// Enable cors for dev
-// app.use(function(req, res, next) {
-//     res.header('Access-Control-Allow-Credentials', true);
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-//     // res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//     next();
-// });
-
-// app.use(function(req, res, next) {
-// res.header('Access-Control-Allow-Credentials', true);
-// res.header('Access-Control-Allow-Origin', req.headers.origin);
-// res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-// res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
-// if ('OPTIONS' == req.method) {
-//      res.send(200);
-//  } else {
-//      next();
-//  }
-// });
 // 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});// 
+
+
+app.set('jwtTokenSecret', 'secret_string');
+
 app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.urlencoded({
@@ -47,20 +35,6 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 app.use(morgan('dev'));
-app.use(cookieParser('beersecret'));
-
-// Un comment when ready to ramp up Passport stuff
-app.use(session({
-    secret: 'beersecret',
-    resave: false,
-    saveUninitialized: false
-}));
-
-
-
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(flash());
 
 // Serve up index
 app.get('/', function(req, res) {
