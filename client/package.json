@@ -7,6 +7,7 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
+    "es6-promise": "^3.1.2",
     "validator": "^5.0.0",
     "vue": "^1.0.0",
     "vue-resource": "^0.7.0",

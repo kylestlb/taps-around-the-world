@@ -34,6 +34,7 @@
 import validator from 'validator';
 import { API_URL } from '../config';
 import VueRouter from 'vue-router';
+import LoginStore from '../stores/LoginStore.js'
 
 export
 default {
@@ -60,8 +61,12 @@ default {
 
                 }).then((response) => {
                     // Success
+                    console.log('login success: ');
                     console.log(response);
-                    console.log(this.$router);
+
+                    if(response.data.token)
+                        localStorage.setItem('token',response.data.token);                    
+                    LoginStore.setState(true);                    
                     this.$router.go({
                         path: '/bars'
                     });
@@ -76,6 +81,10 @@ default {
                 }).then((response) => {
                     console.log('success!');
                     console.log(response);
+                    if(response.data.token)
+                        localStorage.setItem('token',token);
+                    console.log('tryign to set state?');
+
                 }, (response) => {
                     console.log('failure!');
                     console.log(response);
@@ -84,7 +93,8 @@ default {
         }, addbeer(event) {
             this.$http.post(API_URL + '/beer', {
                 name: 'Bud',
-                brewery: 'Bud'
+                brewery: 'Bud',
+                token: localStorage.getItem('token')
             }).then((response) => {
 
                 console.log(response);
@@ -95,6 +105,7 @@ default {
         logout(event) {
             this.$http.post(API_URL + '/logout').then((response) => {
                 console.log(response);
+                localStorage.setItem('token', '');
             }, (response) => {
                 console.log(response);
             });

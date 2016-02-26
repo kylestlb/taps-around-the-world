@@ -9,8 +9,8 @@ module.exports = function(req, res, next) {
     var token = (req.body && req.body.access_token) ||
         (req.query && req.query.access_token) ||
         req.headers['x-access-token'];
-
     if (token) {
+        console.log('found a token somehow?');
         try {
             var decoded = jwt.decode(token, security.token_secret);
             All.User.get(decoded.iss).then(function(user) {
